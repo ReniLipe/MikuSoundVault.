@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Carrello - MikuSoundVault{% endblock %}
+
+{% block content %}
+<div class="py-5">
+    <h2 class="fw-bold mb-4"><i class="bi bi-cart3"></i> Il tuo Carrello</h2>
+
+    {% if items %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm" style="border: 1px solid var(--miku-border);">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover mb-0" style="background: transparent;">
+                        <thead>
+                            <tr>
+                                <th>Prodotto</th>
+                                <th>Prezzo</th>
+                                <th>Quantità</th>
+                                <th>Totale</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="rounded me-3 d-flex align-items-center justify-content-center" 
+                                             style="width: 50px; height: 50px; background: #1a1a2e; border: 1px solid var(--miku-border);">
+                                            <i class="bi bi-music-note" style="color: var(--miku-teal);"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">{{ item.product.name }}</h6>
+                                            <small class="text-secondary">{{ item.product.category.name }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>€{{ item.product.price }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td style="color: var(--miku-teal);">€{{ item.product.price }}</td>
+                                <td>
+                                    <a href="{% url 'remove_from_cart' item.id %}" class="text-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-4 shadow-sm" style="border: 1px solid var(--miku-border); background: #1a1a2e;">
+                <h4 class="fw-bold mb-3">Riepilogo</h4>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Subtotale</span>
+                    <span>€{{ total }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-4">
+                    <span>Spedizione</span>
+                    <span class="text-success">Gratis</span>
+                </div>
+                <hr style="background-color: var(--miku-border);">
+                <div class="d-flex justify-content-between mb-4">
+                    <span class="fs-5 fw-bold">Totale</span>
+                    <span class="fs-5 fw-bold" style="color: var(--miku-teal);">€{{ total }}</span>
+                </div>
+                <a href="{% url 'checkout' %}" class="btn btn-miku btn-lg w-100">
+                    Procedi all'ordine
+                </a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-cart-x" style="font-size: 4rem; color: var(--miku-border);"></i>
+        <p class="text-secondary mt-3 fs-5">Il tuo carrello è vuoto.</p>
+        <a href="{% url 'product_list' %}" class="btn btn-miku mt-2">Torna allo store</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

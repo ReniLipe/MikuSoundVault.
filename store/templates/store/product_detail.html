@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.name }} - MikuSoundVault{% endblock %}
+
+{% block content %}
+<div class="row pt-5">
+    <!-- Immagine Prodotto -->
+    <div class="col-md-6 mb-4">
+        <div class="p-4 rounded shadow-sm d-flex align-items-center justify-content-center" 
+             style="background: #1a1a2e; min-height: 400px; border: 1px solid var(--miku-border);">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" class="img-fluid rounded" alt="{{ product.name }}">
+            {% else %}
+                <div class="text-center">
+                    <i class="bi bi-music-note-beamed" style="font-size: 8rem; color: var(--miku-teal);"></i>
+                    <p class="text-secondary mt-3">Foto non disponibile</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Info Prodotto -->
+    <div class="col-md-6">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-teal">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'product_list' %}" class="text-teal">Catalogo</a></li>
+                <li class="breadcrumb-item active text-secondary" aria-current="page">{{ product.category.name }}</li>
+            </ol>
+        </nav>
+
+        <h1 class="fw-bold mb-3">{{ product.name }}</h1>
+        <h2 class="fw-bold mb-4" style="color: var(--miku-teal);">€{{ product.price }}</h2>
+        
+        <div class="mb-4">
+            <h5 class="fw-bold">Descrizione</h5>
+            <p class="text-secondary" style="font-size: 1.1rem; line-height: 1.6;">
+                {{ product.description }}
+            </p>
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4">
+            <a href="{% url 'add_to_cart' product.id %}" class="btn btn-miku btn-lg px-5">
+                <i class="bi bi-cart-plus"></i> Aggiungi al carrello
+            </a>
+            <button class="btn btn-outline-secondary btn-lg">
+                <i class="bi bi-heart"></i>
+            </button>
+        </div>
+
+        <div class="p-3 rounded" style="background: #1a1a2e; border: 1px solid var(--miku-border);">
+            <ul class="list-unstyled mb-0">
+                <li class="mb-2"><i class="bi bi-check2-circle text-teal me-2"></i> Disponibilità: <strong>In Stock ({{ product.stock }} pezzi)</strong></li>
+                <li class="mb-2"><i class="bi bi-truck text-teal me-2"></i> Spedizione: <strong>Gratuita in tutta Italia</strong></li>
+                <li><i class="bi bi-shield-check text-teal me-2"></i> Garanzia: <strong>24 mesi ufficiale</strong></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-teal { color: var(--miku-teal) !important; }
+</style>
+{% endblock %}

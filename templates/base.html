@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="it" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MikuSoundVault{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --miku-teal: #39C5BB;
+            --miku-dark: #0a0a0f;
+            --miku-card: #12121a;
+            --miku-border: #39C5BB44;
+        }
+        body {
+            background-color: var(--miku-dark);
+            color: #f0f0f0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .navbar {
+            background: linear-gradient(90deg, #0a0a0f, #0d1f1e) !important;
+            border-bottom: 1px solid var(--miku-border);
+        }
+        .navbar-brand {
+            color: var(--miku-teal) !important;
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+        .nav-link { color: #ccc !important; }
+        .nav-link:hover { color: var(--miku-teal) !important; }
+        .btn-miku {
+            background-color: var(--miku-teal);
+            color: #000;
+            font-weight: 600;
+            border: none;
+        }
+        .btn-miku:hover {
+            background-color: #2ea89f;
+            color: #000;
+        }
+        .card {
+            background-color: var(--miku-card);
+            border: 1px solid var(--miku-border);
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-4px); }
+        footer {
+            background: #0d1f1e;
+            border-top: 1px solid var(--miku-border);
+            color: #888;
+        }
+        .miku-mascotte {
+            width: 120px;
+            filter: drop-shadow(0 0 12px #39C5BB88);
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">🎵 MikuSoundVault</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'product_list' %}">Catalogo</a></li>
+            </ul>
+            <ul class="navbar-nav ms-auto align-items-center gap-2">
+                <li class="nav-item">
+                    <button class="btn btn-sm btn-outline-secondary" id="langToggle">🌐 EN</button>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'cart_detail' %}"><i class="bi bi-cart3"></i> Carrello</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle"></i> {{ user.username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                        <li><a class="dropdown-item" href="/users/profile/">Profilo</a></li>
+                        {% if user.is_superuser %}
+                        <li><a class="dropdown-item text-warning" href="{% url 'admin_orders' %}"><i class="bi bi-speedometer2"></i> Gestionale Ordini</a></li>
+                        {% endif %}
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="/users/logout/">Logout</a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li class="nav-item"><a class="btn btn-outline-secondary btn-sm" href="/users/login/">Login</a></li>
+                <li class="nav-item"><a class="btn btn-miku btn-sm" href="/users/register/">Registrati</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="container py-4">
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="py-4 mt-5">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div>
+            <strong style="color: var(--miku-teal);">MikuSoundVault</strong><br>
+            <small>Il tuo negozio di strumenti musicali</small>
+        </div>
+        <img src="/media/mascotte/miku.jpg" alt="Miku" class="miku-mascotte">
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Traduzione IT/EN base
+    const translations = {
+        'IT': {
+            'Catalogo': 'Catalogo', 'Carrello': 'Carrello',
+            'Profilo': 'Profilo', 'I miei ordini': 'I miei ordini',
+            'Gestione Store': 'Gestione Store', 'Logout': 'Logout',
+            'Login': 'Login', 'Registrati': 'Registrati',
+            'Il tuo negozio di strumenti musicali': 'Il tuo negozio di strumenti musicali'
+        },
+        'EN': {
+            'Catalogo': 'Catalogue', 'Carrello': 'Cart',
+            'Profilo': 'Profile', 'I miei ordini': 'My Orders',
+            'Gestione Store': 'Store Management', 'Logout': 'Logout',
+            'Login': 'Login', 'Registrati': 'Sign Up',
+            'Il tuo negozio di strumenti musicali': 'Your music instruments store'
+        }
+    };
+    let currentLang = 'IT';
+    document.getElementById('langToggle').addEventListener('click', function() {
+        currentLang = currentLang === 'IT' ? 'EN' : 'IT';
+        this.textContent = currentLang === 'IT' ? '🌐 EN' : '🌐 IT';
+        const t = translations[currentLang];
+        document.querySelectorAll('[data-translate]').forEach(el => {
+            const key = el.getAttribute('data-translate');
+            if (t[key]) el.textContent = t[key];
+        });
+    });
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

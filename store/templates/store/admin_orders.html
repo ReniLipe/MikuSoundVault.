@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Gestionale Ordini - MikuSoundVault{% endblock %}
+
+{% block content %}
+<div class="py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="bi bi-speedometer2"></i> Gestionale Ordini</h2>
+        <span class="badge bg-miku text-dark">{{ orders.count }} ordini totali</span>
+    </div>
+
+    <div class="card shadow-sm" style="border: 1px solid var(--miku-border);">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>ID Ordine</th>
+                        <th>Cliente</th>
+                        <th>Data</th>
+                        <th>Totale</th>
+                        <th>Stato</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td><strong>#{{ order.id }}</strong></td>
+                        <td>{{ order.customer.username }}</td>
+                        <td>{{ order.created_at|date:"d/m/Y H:i" }}</td>
+                        <td style="color: var(--miku-teal);">€{{ order.total_price }}</td>
+                        <td>
+                            {% if order.status == 'pending' %}
+                                <span class="badge bg-warning text-dark">In attesa</span>
+                            {% elif order.status == 'confirmed' %}
+                                <span class="badge bg-info text-dark">Confermato</span>
+                            {% elif order.status == 'shipped' %}
+                                <span class="badge bg-primary">Spedito</span>
+                            {% elif order.status == 'delivered' %}
+                                <span class="badge bg-success">Consegnato</span>
+                            {% else %}
+                                <span class="badge bg-danger">Annullato</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form action="{% url 'update_order_status' order.id %}" method="POST" class="d-flex gap-2">
+                                {% csrf_token %}
+                                <select name="status" class="form-select form-select-sm bg-dark text-light border-secondary">
+                                    <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>In attesa</option>
+                                    <option value="confirmed" {% if order.status == 'confirmed' %}selected{% endif %}>Confermato</option>
+                                    <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Spedito</option>
+                                    <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Consegnato</option>
+                                    <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Annullato</option>
+                                </select>
+                                <button type="submit" class="btn btn-miku btn-sm">Aggiorna</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <!-- Dettaglio Prodotti Ordine -->
+                    <tr class="table-borderless">
+                        <td colspan="6" class="ps-5 pb-3">
+                            <small class="text-secondary">Articoli: 
+                                {% for item in order.items.all %}
+                                    {{ item.quantity }}x {{ item.product.name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </small>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-miku { background-color: var(--miku-teal); }
+</style>
+{% endblock %}

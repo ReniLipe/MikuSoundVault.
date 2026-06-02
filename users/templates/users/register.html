@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Registrati - MikuSoundVault{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card p-4">
+            <div class="text-center mb-4">
+                <img src="/media/mascotte/miku.jpg" alt="Miku" style="width: 80px;">
+                <h3 class="mt-2 fw-bold" style="color: var(--miku-teal);">Crea il tuo account</h3>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" name="username" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password1" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Conferma Password</label>
+                    <input type="password" name="password2" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-miku w-100">
+                    <i class="bi bi-person-plus"></i> Registrati
+                </button>
+            </form>
+            <p class="text-center mt-3 text-secondary">
+                Hai già un account?
+                <a href="/users/login/" style="color: var(--miku-teal);">Accedi</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

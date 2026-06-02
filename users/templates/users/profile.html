@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Profilo - MikuSoundVault{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <div class="text-center mb-4">
+                <i class="bi bi-person-circle" style="font-size: 4rem; color: var(--miku-teal);"></i>
+                <h3 class="mt-2 fw-bold">{{ user.username }}</h3>
+                <span class="badge" style="background-color: var(--miku-teal); color: #000;">
+                    {{ user.get_role_display }}
+                </span>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" value="{{ user.email }}" disabled>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Telefono</label>
+                    <input type="text" name="phone" class="form-control" value="{{ user.phone }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Indirizzo</label>
+                    <textarea name="address" class="form-control" rows="3">{{ user.address }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-miku w-100">
+                    <i class="bi bi-save"></i> Salva modifiche
+                </button>
+            </form>
+            <div class="mt-3 text-center">
+                <a href="/store/orders/" style="color: var(--miku-teal);">
+                    <i class="bi bi-bag"></i> I miei ordini
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

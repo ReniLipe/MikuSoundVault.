@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}MikuSoundVault - Catalogo{% endblock %}
+
+{% block content %}
+<div class="row pt-4">
+    <!-- Sidebar Categorie -->
+    <div class="col-md-3 mb-4">
+        <div class="card p-3 shadow-sm" style="border: 1px solid var(--miku-border);">
+            <h5 class="fw-bold mb-3"><i class="bi bi-filter"></i> Filtra per</h5>
+            <div class="list-group list-group-flush">
+                <a href="{% url 'product_list' %}" 
+                   class="list-group-item list-group-item-action {% if not selected_category %}active-miku{% endif %}"
+                   style="background: transparent; color: var(--miku-text); border: none;">
+                    Tutti i prodotti
+                </a>
+                {% for category in categories %}
+                <a href="{% url 'product_list' %}?category={{ category.slug }}" 
+                   class="list-group-item list-group-item-action {% if selected_category == category.slug %}active-miku{% endif %}"
+                   style="background: transparent; color: var(--miku-text); border: none;">
+                    {{ category.name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Griglia Prodotti -->
+    <div class="col-md-9">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold">
+                {% if selected_category %}
+                    {{ selected_category|title }}
+                {% else %}
+                    Esplora il Catalogo
+                {% endif %}
+            </h2>
+            <span class="text-secondary">{{ products.count }} prodotti trovati</span>
+        </div>
+
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-md-4 col-sm-6">
+                <div class="card h-100 shadow-sm" style="border: 1px solid var(--miku-border); transition: transform 0.2s;">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" 
+                         style="height: 180px; object-fit: cover;" alt="{{ product.name }}">
+                    {% else %}
+                    <div class="card-img-top d-flex flex-column align-items-center justify-content-center"
+                         style="height: 180px; background: #1a1a2e; color: var(--miku-teal);">
+                        <i class="bi bi-music-note-beamed" style="font-size: 2.5rem;"></i>
+                        <span class="mt-2 small text-secondary">Immagine in arrivo</span>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between mb-1">
+                            <small class="text-secondary">{{ product.category.name }}</small>
+                            <span class="badge bg-dark text-teal" style="color: var(--miku-teal);">Novità</span>
+                        </div>
+                        <h6 class="card-title fw-bold mb-2">{{ product.name }}</h6>
+                        <p class="card-text text-secondary small flex-grow-1">
+                            {{ product.description|truncatechars:80 }}
+                        </p>
+                        <div class="mt-3 d-flex justify-content-between align-items-center">
+                            <span class="fs-5 fw-bold" style="color: var(--miku-teal);">€{{ product.price }}</span>
+                            <a href="{% url 'product_detail' product.slug %}" class="btn btn-miku btn-sm">
+                                <i class="bi bi-eye"></i> Vedi
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-search" style="font-size: 3rem; color: var(--miku-border);"></i>
+                <p class="text-secondary mt-3">Nessun prodotto trovato in questa categoria.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .active-miku {
+        border-left: 3px solid var(--miku-teal) !important;
+        font-weight: bold;
+        color: var(--miku-teal) !important;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+</style>
+{% endblock %}
