@@ -11,6 +11,7 @@ MikuSoundVault è una piattaforma e-commerce e gestionale dedicata alla vendita 
 - **Catalogo Dinamico**: Suddivisione in categorie (Chitarre, Tastiere, ecc.) con filtri.
 - **Sistema Carrello**: Aggiunta, rimozione e riepilogo costi.
 - **Gestionale Admin**: Visualizzazione ordini, dettaglio articoli e aggiornamento stato.
+- **Inventario Magazzino**: Monitoraggio in tempo reale delle scorte con avvisi visivi per stock basso.
 - **Auto-Stock**: Riduzione automatica delle quantità in magazzino al momento del checkout.
 - **Design Responsive**: Ottimizzato per desktop e mobile con Bootstrap 5.
 

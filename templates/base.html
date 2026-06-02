@@ -85,6 +85,7 @@
                         <li><a class="dropdown-item" href="/users/profile/">Profilo</a></li>
                         {% if user.is_superuser %}
                         <li><a class="dropdown-item text-warning" href="{% url 'admin_orders' %}"><i class="bi bi-speedometer2"></i> Gestionale Ordini</a></li>
+                        <li><a class="dropdown-item text-warning" href="{% url 'admin_inventory' %}"><i class="bi bi-box-seam"></i> Inventario Magazzino</a></li>
                         {% endif %}
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item text-danger" href="/users/logout/">Logout</a></li>

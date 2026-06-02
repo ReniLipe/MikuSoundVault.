@@ -14,5 +14,6 @@ urlpatterns = [
     
     # Gestionale Admin
     path('admin-orders/', views.admin_orders, name='admin_orders'),
+    path('admin-inventory/', views.admin_inventory, name='admin_inventory'),
     path('admin-orders/update/<int:order_id>/', views.update_order_status, name='update_order_status'),
 ]

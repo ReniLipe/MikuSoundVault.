@@ -108,6 +108,11 @@ def admin_orders(request):
     return render(request, 'store/admin_orders.html', {'orders': orders})
 
 @user_passes_test(is_admin)
+def admin_inventory(request):
+    products = Product.objects.all().order_by('category', 'name')
+    return render(request, 'store/admin_inventory.html', {'products': products})
+
+@user_passes_test(is_admin)
 def update_order_status(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     if request.method == 'POST':
