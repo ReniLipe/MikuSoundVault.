@@ -14,7 +14,7 @@ MikuSoundVault è una piattaforma e-commerce e gestionale dedicata alla vendita 
 
 ## 🌍 Link al Deployment
 Il progetto è live e completamente testabile al seguente indirizzo:
-👉 **[SOSTITUISCI-QUESTO-TESTO-CON-IL-TUO-LINK-DI-PYTHONANYWHERE]**
+👉 **(https://renatoliperoti.pythonanywhere.com/)**
 
 ---
 
