@@ -1,10 +1,15 @@
-.venv/
+# Ambienti virtuali
 venv/
+.venv/
+env/
+
+# Cache di Python
 __pycache__/
-*.py[cod]
-*$py.class
-.env
+*.pyc
+
+# IDE
 .idea/
 .vscode/
-media/products/
-db.sqlite3-journal
+
+# File di sistema
+.DS_Store

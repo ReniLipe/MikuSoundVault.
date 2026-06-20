@@ -1,14 +1,51 @@
 from django.core.management.base import BaseCommand
-from store.models import Category, Product
 from django.utils.text import slugify
+from django.contrib.auth import get_user_model
+from store.models import Category, Product
+
 
 class Command(BaseCommand):
-    help = 'Popola il database con strumenti musicali e accessori di esempio'
+    help = 'Popola il database con account demo, strumenti musicali e accessori'
 
     def handle(self, *args, **kwargs):
+        # 1. CREAZIONE UTENTI DEMO
+        User = get_user_model()
+
+        self.stdout.write(self.style.WARNING('Creazione account demo in corso...'))
+
+        # Creazione Manager / Admin
+        if not User.objects.filter(username='admin_demo').exists():
+            admin_user = User.objects.create_superuser(
+                username='admin_demo',
+                email='admin@mikusoundvault.com',
+                password='admin12345'
+            )
+            admin_user.role = 'manager'
+            admin_user.save()
+            self.stdout.write(self.style.SUCCESS('Account Manager "admin_demo" creato con password "admin12345".'))
+        else:
+            self.stdout.write('Account "admin_demo" già esistente.')
+
+        # Creazione Cliente Standard
+        if not User.objects.filter(username='user_demo').exists():
+            standard_user = User.objects.create_user(
+                username='user_demo',
+                email='user@mikusoundvault.com',
+                password='user12345'
+            )
+            standard_user.role = 'customer'
+            standard_user.save()
+            self.stdout.write(self.style.SUCCESS('Account Cliente "user_demo" creato con password "user12345".'))
+        else:
+            self.stdout.write('Account "user_demo" già esistente.')
+
+        self.stdout.write(self.style.WARNING('-' * 30))
+
+        # 2. CREAZIONE CATEGORIE E PRODOTTI
         data = {
             'Chitarre': [
-                ('Chitarra Elettrica "Miku Blue"', 850.00, '🎸 Una chitarra elettrica dal colore teal vibrante. Suono cristallino.'),
+                ('Chitarra Elettrica "Miku Blue"', 850.00,
+                 '🎸 Una chitarra elettrica dal colore teal vibrante. Suono cristallino.'),
                 ('Chitarra Acustica "Woods"', 450.00, '🎸 Legno di mogano per un suono caldo e profondo.'),
                 ('Basso Elettrico "Deep Bass"', 600.00, '🎸 4 corde, perfetto per il funk e il rock.'),
                 ('Chitarra Semi-Acustica Jazz', 980.00, '🎸 Eleganza e calore per i tuoi fraseggi jazz.'),
@@ -35,6 +72,8 @@ class Command(BaseCommand):
             ]
         }
 
+        self.stdout.write(self.style.WARNING('Popolamento catalogo in corso...'))
+
         for cat_name, products in data.items():
             category, created = Category.objects.get_or_create(
                 name=cat_name,
@@ -57,5 +96,6 @@ class Command(BaseCommand):
                 )
                 if p_created:
                     self.stdout.write(self.style.SUCCESS(f'Prodotto "{name}" creato.'))
-        
-        self.stdout.write(self.style.SUCCESS('Popolamento completato!'))
+
+        self.stdout.write(
+            self.style.SUCCESS('\n✅ Popolamento completato con successo! Il database è pronto per i test.'))

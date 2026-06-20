@@ -75,25 +75,46 @@
                 <li class="nav-item">
                     <button class="btn btn-sm btn-outline-secondary" id="langToggle">🌐 EN</button>
                 </li>
+
                 {% if user.is_authenticated %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'cart_detail' %}"><i class="bi bi-cart3"></i> Carrello</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        <i class="bi bi-person-circle"></i> {{ user.username }}
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-                        <li><a class="dropdown-item" href="/users/profile/">Profilo</a></li>
-                        {% if user.is_superuser %}
-                        <li><a class="dropdown-item text-warning" href="{% url 'admin_orders' %}"><i class="bi bi-speedometer2"></i> Gestionale Ordini</a></li>
-                        <li><a class="dropdown-item text-warning" href="{% url 'admin_inventory' %}"><i class="bi bi-box-seam"></i> Inventario Magazzino</a></li>
-                        {% endif %}
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="/users/logout/">Logout</a></li>
-                    </ul>
-                </li>
+
+                    {% if user.role == 'customer' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'cart_detail' %}">
+                                <i class="bi bi-cart3"></i> Carrello
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> {{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/users/profile/"><i class="bi bi-person-vcard"></i> Profilo</a></li>
+
+                            {% if user.role == 'manager' or user.is_superuser %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><h6 class="dropdown-header text-warning">⚙️ Pannello Amministrazione</h6></li>
+                                <li><a class="dropdown-item text-warning" href="{% url 'admin_orders' %}"><i class="bi bi-speedometer2"></i> Gestionale Ordini</a></li>
+                                <li><a class="dropdown-item text-warning" href="{% url 'admin_inventory' %}"><i class="bi bi-box-seam"></i> Inventario Magazzino</a></li>
+                                <li><a class="dropdown-item text-warning" href="{% url 'product_create' %}"><i class="bi bi-plus-circle"></i> Aggiungi Prodotto</a></li>
+
+                            {% else %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><h6 class="dropdown-header text-info">👤 Area Riservata Cliente</h6></li>
+                                <li><a class="dropdown-item" href="{% url 'cart_detail' %}"><i class="bi bi-cart3"></i> Il mio Carrello</a></li>
+                                <li><a class="dropdown-item" href="/users/profile/"><i class="bi bi-receipt"></i> I miei Ordini</a></li>
+                            {% endif %}
+
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="/users/logout/"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                        </ul>
+                    </li>
+
                 {% else %}
-                <li class="nav-item"><a class="btn btn-outline-secondary btn-sm" href="/users/login/">Login</a></li>
-                <li class="nav-item"><a class="btn btn-miku btn-sm" href="/users/register/">Registrati</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-secondary btn-sm" href="/users/login/">Login</a></li>
+                    <li class="nav-item"><a class="btn btn-miku btn-sm" href="/users/register/">Registrati</a></li>
                 {% endif %}
             </ul>
         </div>

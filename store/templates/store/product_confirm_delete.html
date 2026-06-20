@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 border-top border-danger border-4">
+                <div class="card-body p-4 text-center">
+                    <div class="text-danger mb-3">
+                        <i class="bi bi-exclamation-triangle-fill" style="font-size: 3rem;"></i>
+                    </div>
+                    <h3 class="card-title h4 mb-3">Eliminazione Prodotto</h3>
+                    <p class="text-muted mb-4">
+                        Sei sicuro di voler eliminare definitivamente il prodotto <strong>{{ object.name }}</strong> dall'inventario di MikuSoundVault? Questa azione non può essere annullata.
+                    </p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                            <a href="{% url 'admin_inventory' %}" class="btn btn-light px-4 me-md-2">Annulla, mantieni</a>
+                            <button type="submit" class="btn btn-danger px-4">Sì, Elimina Definitivamente</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

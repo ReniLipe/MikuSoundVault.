@@ -1,8 +1,14 @@
+# pyrefly: ignore [missing-import]
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
+from django.views.generic import DetailView
 from .models import Category, Product, Cart, CartItem, Order, OrderItem
 from django.db import transaction
+from django.views.generic import CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.urls import reverse_lazy
+from .forms import ProductForm
 
 def home(request):
     categories = Category.objects.all()
@@ -27,9 +33,13 @@ def product_list(request):
         'selected_category': category_slug,
     })
 
-def product_detail(request, slug):
-    product = get_object_or_404(Product, slug=slug, available=True)
-    return render(request, 'store/product_detail.html', {'product': product})
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'store/product_detail.html'
+    context_object_name = 'product'
+
+    def get_queryset(self):
+        return super().get_queryset().filter(available=True)
 
 @login_required
 def cart_detail(request):
@@ -100,7 +110,7 @@ def checkout(request):
 
 # GESTIONALE ADMIN
 def is_admin(user):
-    return user.is_superuser
+    return user.is_authenticated and user.role == 'manager'
 
 @user_passes_test(is_admin)
 def admin_orders(request):
@@ -121,3 +131,49 @@ def update_order_status(request, order_id):
         order.save()
         messages.success(request, f"Stato ordine #{order.id} aggiornato.")
     return redirect('admin_orders')
+
+# --- 1. MIXIN PER I PERMESSI DEL MANAGER ---
+class ManagerRequiredMixin(UserPassesTestMixin):
+    """
+    Verifica che l'utente sia un manager.
+    Se è un cliente normale, mostra un messaggio di errore e lo reindirizza.
+    """
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.role == 'manager'
+
+    def handle_no_permission(self):
+        # Soddisfa il requisito del feedback chiaro per permessi mancanti
+        messages.error(self.request, "Accesso negato: area riservata agli Store Manager.")
+        return redirect('home')
+
+
+# --- 2. VISTE CRUD PER IL PRODOTTO ---
+
+class ProductCreateView(ManagerRequiredMixin, CreateView):
+    model = Product
+    form_class = ProductForm  # Usiamo il form con la tendina
+    template_name = 'store/product_form.html'
+    success_url = reverse_lazy('admin_inventory')
+
+    def form_valid(self, form):
+        messages.success(self.request, "Prodotto creato con successo!")
+        return super().form_valid(form)
+
+class ProductUpdateView(ManagerRequiredMixin, UpdateView):
+    model = Product
+    form_class = ProductForm  # Usiamo il form con la tendina
+    template_name = 'store/product_form.html'
+    success_url = reverse_lazy('admin_inventory')
+
+    def form_valid(self, form):
+        messages.success(self.request, "Prodotto aggiornato con successo!")
+        return super().form_valid(form)
+
+class ProductDeleteView(ManagerRequiredMixin, DeleteView):
+    model = Product
+    template_name = 'store/product_confirm_delete.html'
+    success_url = reverse_lazy('admin_inventory')
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, "Prodotto eliminato definitivamente.")
+        return super().delete(request, *args, **kwargs)

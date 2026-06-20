@@ -13,19 +13,19 @@
                 {% csrf_token %}
                 <div class="mb-3">
                     <label class="form-label">Username</label>
-                    <input type="text" name="username" class="form-control" required>
+                    {{ form.username }}
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" required>
+                    {{ form.email }}
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Password</label>
-                    <input type="password" name="password1" class="form-control" required>
+                    {{ form.password }}
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Conferma Password</label>
-                    <input type="password" name="password2" class="form-control" required>
+                    {{ form.password_confirm }}
                 </div>
                 <button type="submit" class="btn btn-miku w-100">
                     <i class="bi bi-person-plus"></i> Registrati
